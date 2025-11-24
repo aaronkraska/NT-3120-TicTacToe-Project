@@ -1,90 +1,137 @@
-README – Networked Tic-Tac-Toe
-Overview
+# 🎮 Networked Tic-Tac-Toe (Java Client-Server Game)
 
-This project demonstrates a simple client–server network game using plain TCP sockets in Java.
-The server manages the game state and enforces rules; two clients connect and play interactively from separate hosts or VMs.
+A simple **network-based Tic-Tac-Toe** game implemented in Java using **TCP sockets**.  
+The project demonstrates how a server and multiple clients can communicate over a network, maintain shared game state, and enforce rules in real time — using only Java’s standard library.
 
-Files
-File	Description
-TicTacToeServer.java	Handles player connections, validates moves, manages board, and sends updates to both clients.
-TicTacToeClient.java	Connects to the server, displays the board, and sends moves entered by the user.
-How It Works
+---
 
-Protocol messages between server and clients:
+## 🚀 Features
 
-From	Message	Meaning
-Server → Client	ROLE X / ROLE O	Assigns player symbol.
-Server → Client	BOARD + 3 lines	Sends current 3×3 grid.
-Server → Client	TURN X	Indicates whose turn it is.
-Server → Client	YOUR_MOVE	Prompts that player for a move.
-Client → Server	MOVE r c	Sends chosen row and column.
-Server → Client	OK / INVALID	Accepts or rejects the move.
-Server → Client	WIN X / WIN O / DRAW	Game outcome.
+- **Client–Server Architecture:** Two clients connect to a central server.  
+- **Turn-Based Gameplay:** Server enforces turn order and validates moves.  
+- **Real-Time Updates:** The board state is sent to both clients after every move.  
+- **Text-Based Protocol:** Simple human-readable message exchange (`BOARD`, `MOVE`, `WIN`, etc.).  
+- **Cross-Machine Play:** Clients can connect from different VMs or physical hosts.
 
-The game continues until one player wins or all spaces are filled.
+---
 
-Running Locally (Single Machine)
+## 🧩 File Overview
 
-Compile both files:
+| File | Description |
+|------|--------------|
+| **`TicTacToeServer.java`** | Runs the game server. Waits for two players, assigns roles (X/O), manages the game board, and sends updates to clients. |
+| **`TicTacToeClient.java`** | Connects to the server, displays the board, prompts user input, and sends moves. |
 
+---
+
+## 🖥️ Requirements
+
+- **Java 17+** (any modern version works)
+- Two or more terminals (or separate VMs)
+- TCP connectivity between the client and server machines
+
+---
+
+## 🧠 How It Works
+
+**Communication Protocol**
+
+| Direction | Message | Description |
+|------------|----------|-------------|
+| Server → Client | `ROLE X` / `ROLE O` | Assigns a player symbol. |
+| Server → Client | `BOARD` + 3 lines | Sends the 3×3 game board. |
+| Server → Client | `TURN X` / `TURN O` | Indicates whose turn it is. |
+| Server → Client | `YOUR_MOVE` | Prompts the player for input. |
+| Client → Server | `MOVE r c` | Sends chosen row & column (0-2). |
+| Server → Client | `OK` / `INVALID` | Confirms or rejects the move. |
+| Server → Client | `WIN X` / `WIN O` / `DRAW` | Announces game result. |
+
+The server is the **source of truth** for the board state.  
+Clients simply render updates and send their moves.
+
+---
+
+## 🧱 Project Setup
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/aaronkraska/NT-3120-TicTacToe-Project.git
+cd NT-3120-TicTacToe-Project
+
+2️⃣ Compile the Code
 javac TicTacToeServer.java TicTacToeClient.java
 
-
-Start the server:
-
+3️⃣ Run the Server
 java TicTacToeServer
 
 
-Open two terminals and start two clients:
+You should see:
+
+Server listening on port 5000
+Waiting for Player X...
+
+4️⃣ Run Two Clients
+
+Open two more terminals (or two VMs):
 
 java TicTacToeClient
-java TicTacToeClient
-
-Running Across Two Machines or VMs
-
-On the server machine, find its IP address:
-
-ip addr    # Linux
-ipconfig   # Windows
 
 
-Start the server:
+The first client to connect becomes Player X.
 
-java TicTacToeServer
+The second becomes Player O.
+
+🌐 Running Across Machines or VMs
+
+On the server machine, find its IP:
+
+ip addr   # Linux
+ipconfig  # Windows
 
 
-On each client machine, edit this line in TicTacToeClient.java:
+In the client code, change the line:
 
-String serverHost = "192.168.x.x";  // server’s IP
+String serverHost = "";
 
 
-Recompile and run the client:
+to:
+
+String serverHost = "192.168.x.x"; // Replace with server's IP
+
+
+Recompile and run clients again:
 
 javac TicTacToeClient.java
 java TicTacToeClient
 
-Notes
 
-The server must be started before clients connect.
+Make sure both machines are on the same network and that port 5000 is allowed through the firewall.
 
-Use the same PORT number (default 5000) everywhere.
+🧮 Example Gameplay
+Server listening on port 5000
+Waiting for Player X...
+Player X connected.
+Waiting for Player O...
+Player O connected.
 
-If clients can’t connect, check firewall rules and ensure both are on the same network.
+--- Client X ---
+ROLE X
+Current board:
+. . .
+. . .
+. . .
+TURN X
+YOUR_MOVE
+Enter row (0-2): 0
+Enter col (0-2): 0
+Move accepted.
 
-The program uses only Java’s standard library (no external dependencies).
-
-Example Gameplay
-Server: Waiting for Player X...
-Server: Player X connected.
-Server: Player O connected.
-Player X terminal:
-  ROLE X
-  Current board:
-  . . .
-  . . .
-  . . .
-  TURN X
-  YOUR_MOVE
-  Enter row (0-2): 0
-  Enter col (0-2): 0
-  Move accepted.
+--- Client O ---
+ROLE O
+Current board:
+X . .
+. . .
+. . .
+TURN O
+YOUR_MOVE
