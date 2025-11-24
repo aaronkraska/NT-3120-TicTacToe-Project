@@ -12,7 +12,7 @@ public class TicTacToeClient {
 
     public static void main(String[] args) {
         // Address of the server
-        String serverHost = "192.168.56.1";
+        String serverHost = ""; // enter ip address of device running the server file
         int port = 5000; // must match the server's port
 
         // try-with-resources ensures all resources close automatically
@@ -85,4 +85,5 @@ public class TicTacToeClient {
         }
     }
 }
+
 
